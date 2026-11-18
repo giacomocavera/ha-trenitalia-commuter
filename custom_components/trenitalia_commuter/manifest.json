@@ -1,7 +1,7 @@
 {
   "domain": "trenitalia_commuter",
   "name": "Trenitalia Commuter",
-  "codeowners": ["@YOUR_GITHUB_USERNAME"],
+  "codeowners": ["@giacomocavera"],
   "config_flow": true,
   "documentation": "https://github.com/giacomocavera/ha-trenitalia-commuter",
   "integration_type": "service",
