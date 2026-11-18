@@ -16,8 +16,7 @@
       },
       "origin_vt_disambiguate": {
         "title": "Confirm ViaggiaTreno station",
-        "description": "Could not uniquely match '{station}' on ViaggiaTreno. Select the station from the list or enter its Sxxxxx code manually.",
-        "data": {
+        "description": "Could not uniquely match {station} on ViaggiaTreno. Select the station from the list or enter its Sxxxxx code manually.",        "data": {
           "vt_station": "ViaggiaTreno candidate",
           "manual_vt_id": "Manual ViaggiaTreno ID (e.g. S00035)"
         }

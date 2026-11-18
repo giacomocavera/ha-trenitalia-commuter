@@ -16,8 +16,7 @@
       },
       "origin_vt_disambiguate": {
         "title": "Conferma stazione ViaggiaTreno",
-        "description": "Impossibile associare univocamente '{station}' su ViaggiaTreno. Seleziona la stazione dalla lista oppure inserisci manualmente il codice Sxxxxx.",
-        "data": {
+        "description": "Impossibile associare univocamente {station} su ViaggiaTreno. Seleziona la stazione dalla lista oppure inserisci manualmente il codice Sxxxxx.",        "data": {
           "vt_station": "Candidato ViaggiaTreno",
           "manual_vt_id": "Codice ViaggiaTreno manuale (es. S00035)"
         }
