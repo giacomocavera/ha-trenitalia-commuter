@@ -151,6 +151,7 @@ SENSORS: tuple[TrenitaliaSensorDescription, ...] = (
         translation_key="last_sync",
         device_class=SensorDeviceClass.TIMESTAMP,
         entity_category=EntityCategory.DIAGNOSTIC,
+        entity_registry_enabled_default=False,
         icon="mdi:sync",
         value_fn=lambda d: d.vt_last_sync,
         attrs_fn=_last_sync_attrs,

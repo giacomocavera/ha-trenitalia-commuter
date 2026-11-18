@@ -42,6 +42,8 @@ from .models import JourneySolution, RouteSnapshot
 _LOGGER = logging.getLogger(__name__)
 
 _MAX_CONSECUTIVE_VT_ERRORS = 3
+_VT_IDLE_THRESHOLD_MINUTES = 105
+_LEFRECCE_IDLE_INTERVAL_MINUTES = 60
 
 
 @dataclass(slots=True)
@@ -93,15 +95,36 @@ class TrenitaliaCoordinator(DataUpdateCoordinator[CoordinatorData]):
             return self.config_entry.options[key]
         return self.config_entry.data.get(key, default)
 
-    def _should_refresh_lefrecce(self, now: datetime) -> bool:
+    def _is_idle_window(self, now: datetime) -> bool:
+        """Return True when no upcoming train is within ViaggiaTreno's ~105m window."""
+        if self.data is None:
+            return False
+        trains = self.data.snapshot.trains
+        if not trains:
+            return self._last_lf_sync is not None
+        return trains[0].scheduled_departure - now > timedelta(
+            minutes=_VT_IDLE_THRESHOLD_MINUTES
+        )
+
+    def _should_refresh_lefrecce(self, now: datetime, *, idle: bool) -> bool:
         if self._last_lf_sync is None or not self._cached_solutions:
             return True
 
-        lf_interval = self._get_option(
-            CONF_LEFRECCE_INTERVAL, DEFAULT_LEFRECCE_SCAN_INTERVAL_MINUTES
+        lf_interval = int(
+            self._get_option(
+                CONF_LEFRECCE_INTERVAL, DEFAULT_LEFRECCE_SCAN_INTERVAL_MINUTES
+            )
         )
-        if now - self._last_lf_sync >= timedelta(minutes=lf_interval):
+        effective_interval = (
+            max(lf_interval, _LEFRECCE_IDLE_INTERVAL_MINUTES)
+            if idle
+            else lf_interval
+        )
+        if now - self._last_lf_sync >= timedelta(minutes=effective_interval):
             return True
+
+        if idle:
+            return False
 
         # Refresh early if fewer than 2 upcoming scheduled trains remain in cache
         remaining = sum(
@@ -128,9 +151,10 @@ class TrenitaliaCoordinator(DataUpdateCoordinator[CoordinatorData]):
             self._get_option(CONF_PAST_WINDOW, DEFAULT_PAST_WINDOW_MINUTES)
         )
 
+        idle = self._is_idle_window(now)
         last_error: str | None = None
 
-        if self._should_refresh_lefrecce(now):
+        if self._should_refresh_lefrecce(now, idle=idle):
             try:
                 self._cached_solutions = await self._lf_client.get_solutions(
                     origin_id=origin_lf_id,
@@ -151,6 +175,27 @@ class TrenitaliaCoordinator(DataUpdateCoordinator[CoordinatorData]):
                     "LeFrecce refresh failed, using cached schedule: %s", err
                 )
                 last_error = str(err)
+
+        # Skip ViaggiaTreno during night/idle gaps (>105m to next train)
+        if idle and self.data is not None:
+            snapshot = await build_route_snapshot(
+                self._cached_solutions,
+                [],
+                vt_client=None,
+                user_origin_vt_id=origin_vt_id,
+                user_dest_vt_id=dest_vt_id,
+                now=now,
+                max_trains=max_trains,
+                delay_threshold=delay_threshold,
+                enable_andamento_fallback=False,
+            )
+            return CoordinatorData(
+                snapshot=snapshot,
+                lefrecce_last_sync=self._last_lf_sync or now,
+                vt_last_sync=self.data.vt_last_sync,
+                cached_solutions_count=len(self._cached_solutions),
+                last_error=last_error,
+            )
 
         try:
             departures = await self._vt_client.get_departures(origin_vt_id, now)
