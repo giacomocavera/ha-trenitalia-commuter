@@ -31,7 +31,7 @@ A Home Assistant custom integration for Italian train commuters. It tracks any d
 
 ## Screenshots
 
-> *Add screenshots of your Home Assistant Lovelace cards and entity views here to satisfy HACS documentation guidelines (e.g., `![Dashboard Card](docs/screenshot_card.png)`).*
+![Trenitalia Commuter Dashboard](https://github.com/user-attachments/assets/b5d59adb-fd2f-4de4-a6f8-8963d5179c73)
 
 ---
 
