@@ -1,80 +1,81 @@
-# Trenitalia Commuter for Home Assistant
+# Trenitalia Commuter per Home Assistant
 
 [![HACS Validation](https://github.com/giacomocavera/ha-trenitalia-commuter/actions/workflows/validate.yml/badge.svg)](https://github.com/giacomocavera/ha-trenitalia-commuter/actions/workflows/validate.yml)
 [![hacs_badge](https://img.shields.io/badge/HACS-Custom-41BDF5.svg)](https://github.com/hacs/default)
 [![GitHub Release](https://img.shields.io/github/v/release/giacomocavera/ha-trenitalia-commuter)](https://github.com/giacomocavera/ha-trenitalia-commuter/releases)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-A Home Assistant custom integration for Italian train commuters. It tracks any direct or connecting route across Italy (Trenitalia, Trenord, SFM, Frecciarossa, EuroCity), providing live departure schedules, delays, assigned platforms, and disruption status.
+Un'integrazione personalizzata per Home Assistant dedicata ai pendolari ferroviari italiani. Monitora qualsiasi tratta diretta o con cambi in tutta Italia (Trenitalia, Trenord, SFM, Frecciarossa, EuroCity), fornendo orari di partenza in tempo reale, ritardi, binari assegnati e stato dei disagi.
 
 ---
 
-## Features
+## Funzionalità
 
-- **Universal Italian Coverage:** Works for any station pair in Italy (e.g., *Settimo ↔ Torino Porta Susa*, *Milano ↔ Roma*, *Roma Balduina ↔ Roma Ostiense*).
-- **Hybrid API Architecture:**
-  - Uses **LeFrecce API** to discover actual journey solutions, intermediate stops, and operational codes (`bdoOrigin`).
-  - Uses **ViaggiaTreno API** for real-time delays, live platform tracking (scheduled vs actual), and cancellation detection.
-- **Smart Disambiguation:** Resolves LeFrecce station IDs to ViaggiaTreno codes automatically, with fallbacks for station naming differences (e.g., *Torino Porta Susa*, *Reggio Emilia AV Mediopadana*).
-- **Low-impact 2-Speed Polling:**
-  - Long-term schedule cache (LeFrecce, every 20 minutes by default).
-  - Fast live departure board refresh (ViaggiaTreno, every 2 minutes or disabled for on-demand automations).
-- **Entities Provided per Route:**
-  - `sensor.<route>_next_train` (Timestamp of the next operating train with full `trains` upcoming list in attributes)
-  - `sensor.<route>_delay` (Live delay in minutes)
-  - `sensor.<route>_platform` (Live or scheduled platform, supporting roman numerals)
-  - `sensor.<route>_next_train_status` (Human-readable summary, e.g., `SFM2 26266 • 12:38 (+2m) • P.1`)
-  - `binary_sensor.<route>_disruption` (Turns `on` when delay exceeds threshold or trains are cancelled)
-  - `sensor.<route>_last_sync` (Diagnostic timestamp and API health)
-
----
-
-## Screenshots
-
-![Trenitalia Commuter Dashboard](https://github.com/user-attachments/assets/b5d59adb-fd2f-4de4-a6f8-8963d5179c73)
+* **Copertura Italiana Universale:** Funziona per qualsiasi coppia di stazioni in Italia (es. *Settimo ↔ Torino Porta Susa*, *Milano ↔ Roma*, *Roma Balduina ↔ Roma Ostiense*).
+* **Architettura API Ibrida:**
+  * Utilizza le **API LeFrecce** per rilevare le soluzioni di viaggio effettive, le fermate intermedie e i codici operativi (`bdoOrigin`).
+  * Utilizza le **API ViaggiaTreno** per i ritardi in tempo reale, il tracciamento live dei binari (previsto vs effettivo) e il rilevamento delle cancellazioni.
+* **Disambiguazione Intelligente:** Risolve automaticamente gli ID delle stazioni LeFrecce nei codici ViaggiaTreno, con sistemi di fallback per le differenze nei nomi delle stazioni (es. *Torino Porta Susa*, *Reggio Emilia AV Mediopadana*).
+* **Polling a 2 Velocità a Basso Impatto:**
+  * Cache degli orari a lungo termine (LeFrecce, ogni 20 minuti per impostazione predefinita).
+  * Aggiornamento rapido del tabellone delle partenze live (ViaggiaTreno, ogni 2 minuti oppure disabilitato per automazioni su richiesta).
+* **Entità Fornite per Tratta:**
+  * `sensor.<route>_next_train` (Timestamp del prossimo treno operativo con l'elenco completo `trains` dei prossimi treni negli attributi)
+  * `sensor.<route>_delay` (Ritardo in tempo reale in minuti)
+  * `sensor.<route>_platform` (Binario effettivo o previsto, con supporto per i numeri romani)
+  * `sensor.<route>_next_train_status` (Riepilogo leggibile, es. `SFM2 26266 • 12:38 (+2m) • P.1`)
+  * `binary_sensor.<route>_disruption` (Si attiva su `on` quando il ritardo supera la soglia impostata o i treni vengono cancellati)
+  * `sensor.<route>_last_sync` (Timestamp diagnostico e stato di salute delle API)
 
 ---
 
-## Installation
+## Screenshot
 
-### Via HACS (Recommended)
-
-1. Ensure [HACS](https://hacs.xyz/) is installed.
-2. In Home Assistant, open **HACS** > **Integrations**.
-3. Click the three dots in the top right corner > **Custom repositories**.
-4. Enter `https://github.com/giacomocavera/ha-trenitalia-commuter` and select category **Integration**.
-5. Click **Download**, then restart Home Assistant.
-
-### Manual Installation
-
-1. Download the latest release from the [Releases](https://github.com/giacomocavera/ha-trenitalia-commuter/releases) page.
-2. Copy the `custom_components/trenitalia_commuter` folder into your Home Assistant `<config>/custom_components/` directory.
-3. Restart Home Assistant.
+![Dashboard Trenitalia Commuter](https://github.com/user-attachments/assets/b5d59adb-fd2f-4de4-a6f8-8963d5179c73)
 
 ---
 
-## Configuration
+## Installazione
 
-1. In Home Assistant, navigate to **Settings** > **Devices & Services**.
-2. Click **Add Integration** and search for **Trenitalia Commuter**.
-3. Follow the guided setup:
-   - Search and select your **Origin station**.
-   - Search and select your **Destination station**.
-   - Set route preferences (Direct trains only, Regional only, Delay threshold, Route name).
-4. You can configure multiple routes independently (e.g., one for *Home → Work* and another for *Work → Home*).
+### Tramite HACS (Consigliato)
 
-### Options
+1. Assicurati che [HACS](https://hacs.xyz/) sia installato.
+2. In Home Assistant, apri **HACS** > **Integrazioni**.
+3. Clicca sui tre puntini in alto a destra > **Repository personalizzati**.
+4. Inserisci `https://github.com/giacomocavera/ha-trenitalia-commuter` e seleziona la categoria **Integrazione**.
+5. Clicca su **Scarica**, quindi riavvia Home Assistant.
 
-After setup, click **Configure** on the integration card to adjust:
-- Polling intervals (ViaggiaTreno live polling, LeFrecce schedule refresh).
-- Lookback window for delayed past departures.
-- Disruption delay threshold.
+### Installazione Manuale
+
+1. Scarica l'ultima versione dalla pagina delle [Releases](https://github.com/giacomocavera/ha-trenitalia-commuter/releases).
+2. Copia la cartella `custom_components/trenitalia_commuter` nella directory `<config>/custom_components/` del tuo Home Assistant.
+3. Riavvia Home Assistant.
 
 ---
 
-## Automation Example
+## Configurazione
 
-Send a mobile notification when your morning train is delayed or cancelled:
+1. In Home Assistant, vai su **Impostazioni** > **Dispositivi e servizi**.
+2. Clicca su **Aggiungi integrazione** e cerca **Trenitalia Commuter**.
+3. Segui la configurazione guidata:
+   * Cerca e seleziona la tua **Stazione di partenza**.
+   * Cerca e seleziona la tua **Stazione di destinazione**.
+   * Imposta le preferenze della tratta (Solo treni diretti, Solo regionali, Soglia di ritardo, Nome della tratta).
+4. Puoi configurare più tratte in modo indipendente (es. una per *Casa → Lavoro* e un'altra per *Lavoro → Casa*).
+
+### Opzioni
+
+Dopo la configurazione, clicca su **Configura** nella scheda dell'integrazione per regolare:
+
+* Intervalli di polling (polling live di ViaggiaTreno, aggiornamento orari di LeFrecce).
+* Finestra temporale retrospettiva (lookback) per le partenze passate in ritardo.
+* Soglia di ritardo per la segnalazione dei disagi.
+
+---
+
+## Esempio di Automazione
+
+Invia una notifica sul telefono quando il tuo treno del mattino è in ritardo o cancellato:
 
 ```yaml
 alias: "Alert: Morning Train Delay"
@@ -97,4 +98,4 @@ action:
 
 ## Disclaimer
 
-This integration is an independent open-source project and is not affiliated with, endorsed by, or connected to Trenitalia S.p.A. or Ferrovie dello Stato Italiane.
+Questa integrazione è un progetto open-source indipendente e non è affiliata, approvata o collegata a Trenitalia S.p.A. o a Ferrovie dello Stato Italiane.
