@@ -1,0 +1,99 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Stazione di partenza",
+        "description": "Cerca la stazione di origine della tua tratta.",
+        "data": {
+          "origin_query": "Nome stazione di partenza"
+        }
+      },
+      "origin_select": {
+        "title": "Seleziona stazione di partenza",
+        "data": {
+          "origin_station": "Stazione"
+        }
+      },
+      "origin_vt_disambiguate": {
+        "title": "Conferma stazione ViaggiaTreno",
+        "description": "Impossibile associare univocamente '{station}' su ViaggiaTreno. Seleziona la stazione dalla lista oppure inserisci manualmente il codice Sxxxxx.",
+        "data": {
+          "vt_station": "Candidato ViaggiaTreno",
+          "manual_vt_id": "Codice ViaggiaTreno manuale (es. S00035)"
+        }
+      },
+      "dest_search": {
+        "title": "Stazione di arrivo",
+        "description": "Cerca la stazione di destinazione della tua tratta.",
+        "data": {
+          "dest_query": "Nome stazione di arrivo"
+        }
+      },
+      "dest_select": {
+        "title": "Seleziona stazione di arrivo",
+        "data": {
+          "dest_station": "Stazione"
+        }
+      },
+      "route_options": {
+        "title": "Preferenze tratta",
+        "data": {
+          "name": "Nome tratta",
+          "no_changes": "Solo treni diretti",
+          "regional_only": "Solo treni regionali",
+          "max_trains": "Numero di prossimi treni da mantenere",
+          "delay_threshold": "Soglia disagio per ritardi (minuti)"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Impossibile contattare le API Trenitalia. Riprova.",
+      "no_stations_found": "Nessuna stazione trovata.",
+      "invalid_vt_id": "Codice ViaggiaTreno non valido (formato atteso Sxxxxx).",
+      "same_station": "La destinazione deve essere diversa dalla partenza."
+    },
+    "abort": {
+      "already_configured": "Questa tratta è già configurata."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Opzioni tratta e aggiornamento",
+        "data": {
+          "no_changes": "Solo treni diretti",
+          "regional_only": "Solo treni regionali",
+          "max_trains": "Numero di prossimi treni da mantenere",
+          "delay_threshold": "Soglia disagio per ritardi (minuti)",
+          "vt_interval": "Intervallo polling live (minuti, 0 = solo manuale)",
+          "lefrecce_interval": "Intervallo aggiornamento orari (minuti)",
+          "past_window": "Finestra treni passati in ritardo (minuti)"
+        }
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "next_train": {
+        "name": "Prossimo treno"
+      },
+      "delay": {
+        "name": "Ritardo"
+      },
+      "platform": {
+        "name": "Binario"
+      },
+      "next_train_status": {
+        "name": "Stato prossimo treno"
+      },
+      "last_sync": {
+        "name": "Ultimo aggiornamento"
+      }
+    },
+    "binary_sensor": {
+      "disruption": {
+        "name": "Disagio"
+      }
+    }
+  }
+}

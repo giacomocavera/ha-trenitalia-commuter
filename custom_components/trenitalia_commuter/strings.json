@@ -1,0 +1,99 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Origin station",
+        "description": "Search for your departure station.",
+        "data": {
+          "origin_query": "Departure station name"
+        }
+      },
+      "origin_select": {
+        "title": "Select origin station",
+        "data": {
+          "origin_station": "Station"
+        }
+      },
+      "origin_vt_disambiguate": {
+        "title": "Confirm ViaggiaTreno station",
+        "description": "Could not uniquely match '{station}' on ViaggiaTreno. Select the station from the list or enter its Sxxxxx code manually.",
+        "data": {
+          "vt_station": "ViaggiaTreno candidate",
+          "manual_vt_id": "Manual ViaggiaTreno ID (e.g. S00035)"
+        }
+      },
+      "dest_search": {
+        "title": "Destination station",
+        "description": "Search for your arrival station.",
+        "data": {
+          "dest_query": "Arrival station name"
+        }
+      },
+      "dest_select": {
+        "title": "Select destination station",
+        "data": {
+          "dest_station": "Station"
+        }
+      },
+      "route_options": {
+        "title": "Route preferences",
+        "data": {
+          "name": "Route name",
+          "no_changes": "Direct trains only",
+          "regional_only": "Regional trains only",
+          "max_trains": "Number of upcoming trains to keep",
+          "delay_threshold": "Disruption alert threshold (minutes)"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Unable to connect to Trenitalia APIs. Please try again.",
+      "no_stations_found": "No matching stations found.",
+      "invalid_vt_id": "Invalid ViaggiaTreno station ID (expected format Sxxxxx).",
+      "same_station": "Destination must be different from origin."
+    },
+    "abort": {
+      "already_configured": "This route is already configured."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Route & polling options",
+        "data": {
+          "no_changes": "Direct trains only",
+          "regional_only": "Regional trains only",
+          "max_trains": "Number of upcoming trains to keep",
+          "delay_threshold": "Disruption alert threshold (minutes)",
+          "vt_interval": "Live polling interval (minutes, 0 = manual only)",
+          "lefrecce_interval": "Schedule refresh interval (minutes)",
+          "past_window": "Past departure lookback window (minutes)"
+        }
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "next_train": {
+        "name": "Next train"
+      },
+      "delay": {
+        "name": "Delay"
+      },
+      "platform": {
+        "name": "Platform"
+      },
+      "next_train_status": {
+        "name": "Next train status"
+      },
+      "last_sync": {
+        "name": "Last sync"
+      }
+    },
+    "binary_sensor": {
+      "disruption": {
+        "name": "Disruption"
+      }
+    }
+  }
+}
